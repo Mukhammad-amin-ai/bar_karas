@@ -6,6 +6,71 @@
     justify-content: space-between;
     max-width: 480px;
     padding-inline: 20px;
+
+    .account-header {
+      width: 100%;
+      padding: 12px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .left-box {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        .img-box {
+          position: relative;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+          overflow: hidden;
+        }
+
+        .img-box::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          padding: 1px;
+          background: linear-gradient(
+            134.4deg,
+            #fd5c51 14.85%,
+            #b343ca 53.08%,
+            #4564f8 89.08%
+          );
+          border-radius: 50%;
+          -webkit-mask: linear-gradient(#fff 0 0) content-box,
+            linear-gradient(#fff 0 0);
+          -webkit-mask-composite: destination-out;
+          mask-composite: exclude;
+          pointer-events: none;
+          z-index: 0;
+        }
+
+        .img-box img {
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
+          z-index: 1;
+          position: relative;
+        }
+
+        span {
+          font-weight: 600;
+          font-size: 16px;
+          line-height: 20px;
+        }
+      }
+      .email {
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 16px;
+        color: #8f8f8e;
+      }
+    }
   }
   .app-name {
     font-weight: 600;
