@@ -10,6 +10,7 @@ export const Button = ({
   onClick,
   ...rest
 }) => {
+
   const className = grayBtn ? 'gray-btn' : 'orange-btn';
 
   const content = icon ? (
@@ -24,7 +25,7 @@ export const Button = ({
   };
 
   return type === 'button' ? (
-    <button {...commonProps} onClick={onClick}>
+    <button  {...commonProps} onClick={onClick}>
       {content}
     </button>
   ) : (
