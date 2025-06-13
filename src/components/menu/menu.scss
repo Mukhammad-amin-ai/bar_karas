@@ -1,0 +1,40 @@
+.menu-container {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.menu-list {
+  display: flex;
+  gap: 4px;
+  min-width: 375px;
+  overflow-x: auto;
+  margin-bottom: 12px;
+  list-style: none;
+  white-space: nowrap;
+  padding: 12px 0 12px 20px;
+  position: sticky;
+  top: 0;
+  left: 0;
+  background: #fff;
+  z-index: 99;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  .menu-link {
+    padding: 8px 12px;
+    border-radius: 12px;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    text-align: center;
+    color: #8f8f8e;
+
+    &.active {
+      background: #eeeeee;
+      color: #21201f;
+    }
+  }
+}

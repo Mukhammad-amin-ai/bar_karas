@@ -1,0 +1,54 @@
+.login-page {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  &__content {
+    text-align: center;
+  }
+  .company-logo {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+  }
+  &__title {
+    font-weight: 700;
+    font-size: 28px;
+    line-height: 36px;
+    margin: 16px 0 8px 0;
+  }
+  &__desc {
+    line-height: 24px;
+  }
+
+  &__btns {
+    margin-top: 40px;
+
+    .yandex-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #21201f;
+      padding: 10px 12px;
+      border-radius: 16px;
+      font-family: 'Inter';
+      font-weight: 600;
+      font-size: 14px;
+      line-height: 20px;
+      letter-spacing: 0%;
+      text-align: center;
+      color: #fff;
+      &__icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+      }
+    }
+    .gray-btn {
+      border-radius: 16px;
+      height: 52px;
+      margin-top: 16px;
+    }
+  }
+}
