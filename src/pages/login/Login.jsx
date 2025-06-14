@@ -33,7 +33,7 @@ export const Login = () => {
               alt="user img"
             />
           </Link>
-          <Button to="/home" label="Посмотреть меню" grayBtn={true} />
+          <Button to="/" label="Посмотреть меню" grayBtn={true} />
         </div>
       </div>
     </div>
