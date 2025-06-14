@@ -1,17 +1,20 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import {
   BottomCardModal,
   Cart,
   Menu,
   ProductCardModal,
   ProductsList,
-} from '../../components';
-import { Header } from '../../components/header/Header';
-import './home.scss';
+} from "../../components";
+import { Header } from "../../components/header/Header";
+import { useDispatch } from "react-redux";
+import "./home.scss";
+import { FetchProducts } from "./module";
 
 export const Home = () => {
+  const dispatch = useDispatch();
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [modals, setModals] = useState({
     productCard: false,
@@ -21,7 +24,7 @@ export const Home = () => {
   const [showBottomModal, setShowBottomModal] = useState(false);
 
   useEffect(() => {
-    const savedCart = localStorage.getItem('cartItems');
+    const savedCart = localStorage.getItem("cartItems");
     if (savedCart) {
       const parsedCart = JSON.parse(savedCart);
 
@@ -49,18 +52,18 @@ export const Home = () => {
       }
     };
 
-    window.addEventListener('openCartModal', handleOpenCartModal);
-    window.addEventListener('cartUpdated', handleCartUpdate);
+    window.addEventListener("openCartModal", handleOpenCartModal);
+    window.addEventListener("cartUpdated", handleCartUpdate);
 
     return () => {
-      window.removeEventListener('openCartModal', handleOpenCartModal);
-      window.removeEventListener('cartUpdated', handleCartUpdate);
+      window.removeEventListener("openCartModal", handleOpenCartModal);
+      window.removeEventListener("cartUpdated", handleCartUpdate);
     };
   }, []);
 
   useEffect(() => {
     const handleOutsideClick = (e) => {
-      if (e.target.classList.contains('modal')) {
+      if (e.target.classList.contains("modal")) {
         setModals({
           productCard: false,
           cart: false,
@@ -68,8 +71,8 @@ export const Home = () => {
       }
     };
 
-    document.addEventListener('click', handleOutsideClick);
-    return () => document.removeEventListener('click', handleOutsideClick);
+    document.addEventListener("click", handleOutsideClick);
+    return () => document.removeEventListener("click", handleOutsideClick);
   }, []);
 
   const handleProductClick = (product) => {
@@ -110,14 +113,24 @@ export const Home = () => {
       acc[item.id] = item;
       return acc;
     }, {});
-    localStorage.setItem('cartItems', JSON.stringify(cartObject));
+    localStorage.setItem("cartItems", JSON.stringify(cartObject));
 
     window.dispatchEvent(
-      new CustomEvent('cartUpdated', {
+      new CustomEvent("cartUpdated", {
         detail: { cartItems: cartObject },
       })
     );
   };
+
+  useEffect(() => {
+    dispatch(
+      FetchProducts({
+        headers: {
+          "x-restaurant-id": 2,
+        },
+      })
+    );
+  }, [dispatch]);
 
   return (
     <div>
@@ -130,14 +143,14 @@ export const Home = () => {
 
       {/* ProductCardModal is always in DOM, just hidden by default */}
       <ProductCardModal
-        className={modals.productCard ? 'show' : ''}
+        className={modals.productCard ? "show" : ""}
         product={selectedProduct}
         onClose={handleCloseModal}
         onAddToCart={handleAddToCart}
       />
 
       <Cart
-        className={modals.cart ? 'show' : ''}
+        className={modals.cart ? "show" : ""}
         cartItems={cartItems}
         setCartItems={(updatedCartItems) => {
           setCartItems(updatedCartItems);
@@ -148,18 +161,18 @@ export const Home = () => {
               acc[item.id] = item;
               return acc;
             }, {});
-            localStorage.setItem('cartItems', JSON.stringify(cartObject));
+            localStorage.setItem("cartItems", JSON.stringify(cartObject));
 
             window.dispatchEvent(
-              new CustomEvent('cartUpdated', {
+              new CustomEvent("cartUpdated", {
                 detail: { cartItems: cartObject },
               })
             );
           } else {
-            localStorage.removeItem('cartItems');
+            localStorage.removeItem("cartItems");
 
             window.dispatchEvent(
-              new CustomEvent('cartUpdated', {
+              new CustomEvent("cartUpdated", {
                 detail: { cartItems: {} },
               })
             );
@@ -172,7 +185,7 @@ export const Home = () => {
         <BottomCardModal
           cartItems={cartItems}
           onClick={() => setModals({ productCard: false, cart: true })}
-          className='show'
+          className="show"
         />
       )}
     </div>
