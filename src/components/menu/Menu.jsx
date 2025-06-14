@@ -1,13 +1,14 @@
-import { useState, useEffect, useRef } from 'react';
-import './menu.scss';
+import { useState, useEffect, useRef } from "react";
+import "./menu.scss";
+import { CategorySkeleton } from "../skeleton/categorySkeleton";
 
 export const Menu = () => {
   const initialCategories = [
-    { label: 'Первые блюда', active: true },
-    { label: 'Супы', active: false },
-    { label: 'Вок', active: false },
-    { label: 'На рисе', active: false },
-    { label: 'Суши', active: false },
+    { label: "Первые блюда", active: true },
+    { label: "Супы", active: false },
+    { label: "Вок", active: false },
+    { label: "На рисе", active: false },
+    { label: "Суши", active: false },
   ];
 
   const [categories, setCategories] = useState(initialCategories);
@@ -24,8 +25,8 @@ export const Menu = () => {
 
     updateMenuHeight();
 
-    window.addEventListener('resize', updateMenuHeight);
-    return () => window.removeEventListener('resize', updateMenuHeight);
+    window.addEventListener("resize", updateMenuHeight);
+    return () => window.removeEventListener("resize", updateMenuHeight);
   }, []);
 
   useEffect(() => {
@@ -52,7 +53,7 @@ export const Menu = () => {
           prevCategories.map((cat) => ({
             ...cat,
             active:
-              cat.label.toLowerCase().replace(/\s+/g, '-') ===
+              cat.label.toLowerCase().replace(/\s+/g, "-") ===
               mostVisibleSection,
           }))
         );
@@ -65,7 +66,7 @@ export const Menu = () => {
     );
 
     categories.forEach((category) => {
-      const categorySlug = category.label.toLowerCase().replace(/\s+/g, '-');
+      const categorySlug = category.label.toLowerCase().replace(/\s+/g, "-");
       const element = document.getElementById(categorySlug);
       if (element) {
         observer.observe(element);
@@ -91,10 +92,10 @@ export const Menu = () => {
     };
 
     const menuElement = menuRef.current;
-    menuElement.addEventListener('scroll', handleScroll);
+    menuElement.addEventListener("scroll", handleScroll);
 
     return () => {
-      menuElement.removeEventListener('scroll', handleScroll);
+      menuElement.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
@@ -122,7 +123,7 @@ export const Menu = () => {
 
           menuList.scrollTo({
             left: scrollPosition,
-            behavior: 'smooth',
+            behavior: "smooth",
           });
 
           setTimeout(() => {
@@ -144,7 +145,7 @@ export const Menu = () => {
 
     const categorySlug = categories[index].label
       .toLowerCase()
-      .replace(/\s+/g, '-');
+      .replace(/\s+/g, "-");
 
     const element = document.getElementById(categorySlug);
     if (element) {
@@ -154,29 +155,38 @@ export const Menu = () => {
 
       window.scrollTo({
         top: offsetPosition,
-        behavior: 'smooth',
+        behavior: "smooth",
       });
     }
   };
+  const [skeleton] = useState(true);
 
   return (
-    <div className='menu-container'>
-      <ul className='menu-list' ref={menuRef}>
-        {categories.map((category, index) => (
-          <li key={index} className='menu-item'>
-            <a
-              href={`#${category.label.toLowerCase().replace(/\s+/g, '-')}`}
-              className={`menu-link ${category.active ? 'active' : ''}`}
-              onClick={(e) => {
-                e.preventDefault();
-                handleClick(index);
-              }}
-            >
-              {category.label}
-            </a>
-          </li>
-        ))}
-      </ul>
+    <div className="menu-container">
+      {skeleton ? (
+        <div className="menu-list">
+          <CategorySkeleton />
+          <CategorySkeleton />
+          <CategorySkeleton />
+        </div>
+      ) : (
+        <ul className="menu-list" ref={menuRef}>
+          {categories.map((category, index) => (
+            <li key={index} className="menu-item">
+              <a
+                href={`#${category.label.toLowerCase().replace(/\s+/g, "-")}`}
+                className={`menu-link ${category.active ? "active" : ""}`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleClick(index);
+                }}
+              >
+                {category.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };

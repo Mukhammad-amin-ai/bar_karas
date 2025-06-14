@@ -73,6 +73,9 @@ export const ProductItem = ({ product, onProductClick }) => {
       {product.products && product.products.length > 0 ? (
         <div className="product-list">
           <ProductSkeleton />
+          <ProductSkeleton />
+          <ProductSkeleton />
+          <ProductSkeleton />
           {product.products.map((item) => (
             <div
               key={item.id}
