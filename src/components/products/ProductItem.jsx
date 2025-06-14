@@ -1,13 +1,14 @@
-import { useState, useEffect } from 'react';
-import { Button } from '../button/Button';
-import { CounterBtn } from '../counter-btn/CounterBtn';
-import './products.scss';
+import { useState, useEffect } from "react";
+import { Button } from "../button/Button";
+import { CounterBtn } from "../counter-btn/CounterBtn";
+import "./products.scss";
+import { ProductSkeleton } from "../skeleton/ProductSkeleton";
 
 export const ProductItem = ({ product, onProductClick }) => {
   const [cartItems, setCartItems] = useState({});
 
   useEffect(() => {
-    const savedCart = localStorage.getItem('cartItems');
+    const savedCart = localStorage.getItem("cartItems");
     if (savedCart) {
       setCartItems(JSON.parse(savedCart));
     }
@@ -19,8 +20,8 @@ export const ProductItem = ({ product, onProductClick }) => {
       setCartItems(updatedCartItems);
     };
 
-    window.addEventListener('cartUpdated', handleCartUpdate);
-    return () => window.removeEventListener('cartUpdated', handleCartUpdate);
+    window.addEventListener("cartUpdated", handleCartUpdate);
+    return () => window.removeEventListener("cartUpdated", handleCartUpdate);
   }, []);
 
   const handleAddToCart = (item, e) => {
@@ -35,10 +36,10 @@ export const ProductItem = ({ product, onProductClick }) => {
     };
 
     setCartItems(updatedCart);
-    localStorage.setItem('cartItems', JSON.stringify(updatedCart));
+    localStorage.setItem("cartItems", JSON.stringify(updatedCart));
 
     window.dispatchEvent(
-      new CustomEvent('cartUpdated', {
+      new CustomEvent("cartUpdated", {
         detail: { cartItems: updatedCart },
       })
     );
@@ -57,35 +58,36 @@ export const ProductItem = ({ product, onProductClick }) => {
     }
 
     setCartItems(updatedCart);
-    localStorage.setItem('cartItems', JSON.stringify(updatedCart));
+    localStorage.setItem("cartItems", JSON.stringify(updatedCart));
 
     window.dispatchEvent(
-      new CustomEvent('cartUpdated', {
+      new CustomEvent("cartUpdated", {
         detail: { cartItems: updatedCart },
       })
     );
   };
 
   return (
-    <div className='product-category'>
-      <h2 className='category-title'>{product.productCategory}</h2>
+    <div className="product-category">
+      <h2 className="category-title">{product.productCategory}</h2>
       {product.products && product.products.length > 0 ? (
-        <div className='product-list'>
+        <div className="product-list">
+          <ProductSkeleton />
           {product.products.map((item) => (
             <div
               key={item.id}
-              className='product-card'
+              className="product-card"
               onClick={() => onProductClick(item)}
             >
               <img
-                className='product-img'
-                src={item.img || '/placeholder.svg'}
+                className="product-img"
+                src={item.img || "/placeholder.svg"}
                 alt={item.name}
               />
-              <div className='product-card__content'>
-                <h3 className='product-price'>{item.price}</h3>
-                <h4 className='product-name'>{item.name}</h4>
-                <span className='product-weight'>{item.weight}</span>
+              <div className="product-card__content">
+                <h3 className="product-price">{item.price}</h3>
+                <h4 className="product-name">{item.name}</h4>
+                <span className="product-weight">{item.weight}</span>
               </div>
 
               {cartItems[item.id] ? (
@@ -108,7 +110,7 @@ export const ProductItem = ({ product, onProductClick }) => {
                 />
               ) : (
                 <Button
-                  label='Добавить'
+                  label="Добавить"
                   onClick={(e) => handleAddToCart(item, e)}
                 />
               )}
@@ -116,7 +118,7 @@ export const ProductItem = ({ product, onProductClick }) => {
           ))}
         </div>
       ) : (
-        <div className='empty-category'>
+        <div className="empty-category">
           <p>В категории на данный момент нет блюд в наличии.</p>
         </div>
       )}
