@@ -10,6 +10,11 @@ export const Account = () => {
     setIsModalOpen(!isModalOpen);
   };
 
+  const logOut = ()=>{
+    localStorage.clear()
+    window.location.href = '/login'
+  }
+
   return (
     <>
       <div className="account">
@@ -95,8 +100,8 @@ export const Account = () => {
               </div>
             </div>
           </div>
-          <button onClick={localStorage.clear} className="log-out">
-            Выйти из аккаунта
+          <button onClick={logOut} className="log-out">
+            Выйти из аккаунта 
           </button>
         </div>
       </div>
