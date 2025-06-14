@@ -1,6 +1,6 @@
+import { CategorySkeleton } from "../skeleton/CategorySkeleton";
 import { useState, useEffect, useRef } from "react";
 import "./menu.scss";
-import { CategorySkeleton } from "../skeleton/categorySkeleton";
 
 export const Menu = () => {
   const initialCategories = [
