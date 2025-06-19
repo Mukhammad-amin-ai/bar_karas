@@ -49,10 +49,10 @@ export const FetchMenu = (option) => async (dispatch) => {
           active: index === 0,
         };
       });
+      dispatch(setLoading(false));
       dispatch(CategoryListMutate(categoryList));
       dispatch(CategoryMutate(category));
     }
-    dispatch(setLoading(false));
   } catch (e) {
     dispatch(setLoading(true));
     console.error(e);

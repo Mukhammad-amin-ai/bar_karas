@@ -12,9 +12,11 @@ import { Header } from "../../components/header/Header";
 import { useDispatch, useSelector } from "react-redux";
 import { FetchMenu } from "./module";
 import "./home.scss";
+import { useParams } from "react-router-dom";
 
 export const Home = () => {
   const dispatch = useDispatch();
+  const { restaurant } = useParams();
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [modals, setModals] = useState({
     productCard: false,
@@ -129,11 +131,12 @@ export const Home = () => {
     dispatch(
       FetchMenu({
         headers: {
-          "x-restaurant-id": 2,
+          "x-restaurant-id": restaurant,
         },
       })
     );
   }, [dispatch]);
+  // ===================================================
 
   return (
     <div>
@@ -144,7 +147,6 @@ export const Home = () => {
         showBottomModal={showBottomModal}
       />
 
-      {/* ProductCardModal is always in DOM, just hidden by default */}
       <ProductCardModal
         className={modals.productCard ? "show" : ""}
         product={selectedProduct}

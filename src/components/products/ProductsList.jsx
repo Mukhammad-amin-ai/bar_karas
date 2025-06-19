@@ -158,7 +158,7 @@ export const ProductsList = ({ onProductClick, showBottomModal }) => {
       <div className="products-container">
         {productsDB.map((category, index) => {
           const categorySlug = category.productCategory
-            ?.toLowerCase()
+            .toLowerCase()
             .replace(/\s+/g, "-");
 
           return (

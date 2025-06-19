@@ -30,7 +30,7 @@ export const ProductItem = ({ product, onProductClick }) => {
 
     const updatedCart = {
       ...cartItems,
-      [item.id]: {
+      [item._id]: {
         ...item,
         quantity: 1,
       },
@@ -96,26 +96,26 @@ export const ProductItem = ({ product, onProductClick }) => {
                     alt={item.name}
                   />
                   <div className="product-card__content">
-                    <h3 className="product-price">{item.price}</h3>
+                    <h3 className="product-price">{item.price} ₽</h3>
                     <h4 className="product-name line-clamp-1">{item.name}</h4>
-                    <span className="product-weight">{item.weight}</span>
+                    <span className="product-weight">{item.weight} г</span>
                   </div>
 
-                  {cartItems[item.id] ? (
+                  {cartItems[item._id] ? (
                     <CounterBtn
-                      count={cartItems[item.id].quantity}
+                      count={cartItems[item._id].quantity}
                       onIncrement={(e) => {
                         e.stopPropagation();
                         handleQuantityChange(
-                          item.id,
-                          cartItems[item.id].quantity + 1
+                          item._id,
+                          cartItems[item._id].quantity + 1
                         );
                       }}
                       onDecrement={(e) => {
                         e.stopPropagation();
                         handleQuantityChange(
-                          item.id,
-                          cartItems[item.id].quantity - 1
+                          item._id,
+                          cartItems[item._id].quantity - 1
                         );
                       }}
                     />

@@ -94,7 +94,8 @@ export const Cart = ({ className, cartItems, setCartItems, onClose }) => {
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
   const serviceFee = 120;
   const subtotal = cartItems.reduce((sum, item) => {
-    const price = Number.parseInt(item.price.replace(/\D/g, ""));
+    // const price = Number.parseInt(item.price.replace(/\D/g, ""));
+    const price = item.price;
     return sum + price * item.quantity;
   }, 0);
   const total = subtotal + serviceFee;
@@ -133,8 +134,8 @@ export const Cart = ({ className, cartItems, setCartItems, onClose }) => {
         {cartItems.length > 0 ? (
           <>
             <div className="cart-products">
-              {cartItems.map((item) => (
-                <div className="cart-product" key={item.id}>
+              {cartItems.map((item, index) => (
+                <div className="cart-product" key={index}>
                   <div className="left-box">
                     <img
                       className="product-img"
@@ -187,7 +188,7 @@ export const Cart = ({ className, cartItems, setCartItems, onClose }) => {
                 {isProfileNotEmpty ? (
                   <Button label="Заказать" />
                 ) : (
-                  <Button type="button"  label="Заказать" grayBtn={true} />
+                  <Button type="button" label="Заказать" grayBtn={true} />
                 )}
               </div>
               <button className="clear-cart" onClick={clearCart}>

@@ -163,7 +163,7 @@ export const Menu = () => {
     if (element) {
       const elementPosition =
         element.getBoundingClientRect().top + window.scrollY;
-      const offsetPosition = elementPosition - menuHeight.current - 20;
+      const offsetPosition = elementPosition - menuHeight.current - 80;
 
       window.scrollTo({
         top: offsetPosition,
