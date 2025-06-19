@@ -38,3 +38,10 @@
     }
   }
 }
+
+@media screen and (max-width: 375px) {
+  .menu-list {
+    min-width: auto;
+    padding-left: 10px;
+  }
+}
