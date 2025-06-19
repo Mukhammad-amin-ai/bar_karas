@@ -9,9 +9,9 @@ import {
   ProductsList,
 } from "../../components";
 import { Header } from "../../components/header/Header";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { FetchMenu } from "./module";
 import "./home.scss";
-import { FetchProducts } from "./module";
 
 export const Home = () => {
   const dispatch = useDispatch();
@@ -122,9 +122,12 @@ export const Home = () => {
     );
   };
 
+  // API INTEGRATION ===================================
+  const category = useSelector((state) => state.menu.category);
+
   useEffect(() => {
     dispatch(
-      FetchProducts({
+      FetchMenu({
         headers: {
           "x-restaurant-id": 2,
         },
@@ -134,7 +137,7 @@ export const Home = () => {
 
   return (
     <div>
-      <Header />
+      <Header category={category} />
       <Menu />
       <ProductsList
         onProductClick={handleProductClick}

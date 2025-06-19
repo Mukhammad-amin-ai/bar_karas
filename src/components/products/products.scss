@@ -62,3 +62,10 @@
   line-height: 24px;
   color: #8f8f8e;
 }
+
+.line-clamp-1 {
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  display: -webkit-box;
+  overflow: hidden;
+}

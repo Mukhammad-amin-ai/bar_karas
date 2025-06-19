@@ -1,29 +1,62 @@
-import { createSlice } from "@reduxjs/toolkit"
-import  axiosInstance  from '../../providers/axios'
+import { createSlice } from "@reduxjs/toolkit";
+import axiosInstance from "../../providers/axios";
 
 const initialState = {
-  products: [],
+  category: [],
+  loading: true,
+  categoryList: [],
 };
 
-export const PRODUCTS = createSlice({
-  name: "products",
+export const MENU = createSlice({
+  name: "menu",
   initialState,
   reducers: {
-    callToProduct: (state, action) => {
-      state.products = action.payload;
+    CategoryMutate: (state, action) => {
+      state.category = action.payload;
+    },
+    setLoading: (state, action) => {
+      state.loading = action.payload;
+    },
+    CategoryListMutate: (state, action) => {
+      state.categoryList = action.payload;
     },
   },
 });
 
-export const { callToProduct } = PRODUCTS.actions;
+export const { CategoryMutate, setLoading, CategoryListMutate } = MENU.actions;
 
-export const FetchProducts = (option) => async (dispatch) => {
+export const FetchMenu = (option) => async (dispatch) => {
   try {
-    const response = await axiosInstance.get("/menu",option);
-    dispatch(callToProduct(response.data.recipes));
+    const response = await axiosInstance.get("/menu", option);
+    let category;
+    let categoryList;
+    if (response.status === 200) {
+      let data = response.data[0]?.itemCategories;
+      category = data?.map((item, index) => {
+        return {
+          id: index + 1,
+          restaurant: item.restaurant,
+          productCategory: item.name,
+          products: item.items,
+        };
+      });
+
+      categoryList = data?.map((item, index) => {
+        return {
+          id: index + 1,
+          restaurant: item.restaurant,
+          label: item.name,
+          active: index === 0,
+        };
+      });
+      dispatch(CategoryListMutate(categoryList));
+      dispatch(CategoryMutate(category));
+    }
+    dispatch(setLoading(false));
   } catch (e) {
+    dispatch(setLoading(true));
     console.error(e);
   }
 };
 
-export default PRODUCTS.reducer;
+export default MENU.reducer;

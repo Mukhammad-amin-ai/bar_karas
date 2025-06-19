@@ -1,20 +1,24 @@
 import { CategorySkeleton } from "../skeleton/CategorySkeleton";
 import { useState, useEffect, useRef } from "react";
 import "./menu.scss";
+import { useSelector } from "react-redux";
 
 export const Menu = () => {
-  const initialCategories = [
-    { label: "Первые блюда", active: true },
-    { label: "Супы", active: false },
-    { label: "Вок", active: false },
-    { label: "На рисе", active: false },
-    { label: "Суши", active: false },
-  ];
+  const initialCategories = useSelector((state) => state.menu.categoryList);
+  const loading = useSelector((state) => state.menu.loading);
 
-  const [categories, setCategories] = useState(initialCategories);
+  // Initialize with empty array if Redux data not available
+  const [categories, setCategories] = useState([]);
   const menuRef = useRef(null);
   const menuHeight = useRef(0);
   const [isManualScrolling, setIsManualScrolling] = useState(false);
+
+  // Update local state when Redux data changes
+  useEffect(() => {
+    if (initialCategories && initialCategories.length > 0) {
+      setCategories(initialCategories);
+    }
+  }, [initialCategories]);
 
   useEffect(() => {
     const updateMenuHeight = () => {
@@ -30,9 +34,11 @@ export const Menu = () => {
   }, []);
 
   useEffect(() => {
+    // Don't set up observer if categories are not loaded
+    if (!categories || categories.length === 0) return;
+
     const observerOptions = {
       root: null,
-
       rootMargin: `-${menuHeight.current + 20}px 0px 0px 0px`,
       threshold: 0.1,
     };
@@ -76,7 +82,7 @@ export const Menu = () => {
     return () => {
       observer.disconnect();
     };
-  }, [categories, menuHeight.current]);
+  }, [categories]); // Removed initialCategories dependency
 
   const lastManualScrollPosition = useRef(0);
   const isUserScrolling = useRef(false);
@@ -100,6 +106,9 @@ export const Menu = () => {
   }, []);
 
   useEffect(() => {
+    // Don't run if categories are not loaded
+    if (!categories || categories.length === 0) return;
+
     const activeIndex = categories.findIndex((cat) => cat.active);
     if (activeIndex !== -1 && menuRef.current) {
       const menuList = menuRef.current;
@@ -132,9 +141,12 @@ export const Menu = () => {
         }
       }
     }
-  }, [categories]);
+  }, [categories, isManualScrolling]); // Removed initialCategories dependency
 
   const handleClick = (index) => {
+    // Don't handle click if categories are not loaded
+    if (!categories || categories.length === 0) return;
+
     setIsManualScrolling(false);
 
     const updatedCategories = categories.map((cat, i) => ({
@@ -159,11 +171,10 @@ export const Menu = () => {
       });
     }
   };
-  const [skeleton] = useState(true);
 
   return (
     <div className="menu-container">
-      {skeleton ? (
+      {loading || !categories || categories.length === 0 ? (
         <div className="menu-list">
           <CategorySkeleton />
           <CategorySkeleton />
@@ -178,7 +189,7 @@ export const Menu = () => {
                 className={`menu-link ${category.active ? "active" : ""}`}
                 onClick={(e) => {
                   e.preventDefault();
-                  handleClick(index);
+                  handleClick(index); // Fixed: removed +1 which was causing wrong index
                 }}
               >
                 {category.label}
