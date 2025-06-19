@@ -10,7 +10,7 @@ export const ProductCardModal = ({
   onClose,
   onAddToCart,
 }) => {
-  const [showFullDescription, setShowFullDescription] = useState(false);
+  const [showFullDescription, setShowFullDescription] = useState(true);
   const [cartItems, setCartItems] = useState({});
   const [isSwiping, setIsSwiping] = useState(false);
   const [translateY, setTranslateY] = useState(0);
@@ -115,28 +115,29 @@ export const ProductCardModal = ({
     );
   };
 
-  const fullDescription =
-    "Бульон куриный Чинтан (корень имбиря, курица тушка, лук порей, репчатый лук, морковь, чеснок, яблоки), лапша, яйцо, зелень, мясо, специи, соус терияки, кунжут. Блюдо подается горячим и имеет насыщенный вкус с нотками имбиря и чеснока. Идеально подходит для обеда или ужина.";
-  const truncatedDescription =
-    "Бульон куриный Чинтан (корень имбиря, курица тушка, лук порей, репчатый лук, морковь, чеснок, яблоки), лапша, яйцо, зелень, мясо...";
-
+  // product-desc
   const isInCart = product && cartItems[product.id];
 
   const [activeSize, setActiveSize] = useState(1);
-  const productSize = [
-    {
-      id: 1,
-      size: "Маленькая",
-    },
-    {
-      id: 2,
-      size: "Средняя",
-    },
-    // {
-    //   id: 3,
-    //   size: "Большая",
-    // },
-  ];
+  const [productAcc, setProductAcc] = useState("");
+
+  useEffect(() => {
+    if (product?.itemSizes?.length > 0) {
+      const defaultSize = product.itemSizes.find((item) => item.isDefault);
+      if (defaultSize) {
+        setActiveSize(defaultSize.id);
+        setProductAcc(defaultSize);
+        console.log(defaultSize);
+      }
+    }
+  }, [product]);
+
+  const activateSize = (itemId) => {
+    setActiveSize(itemId);
+    const defaultSize = product.itemSizes.find((item) => item._id === itemId);
+    setProductAcc(defaultSize);
+  };
+
   return (
     <div className={`product-card__modal modal ${className}`}>
       <div
@@ -160,22 +161,32 @@ export const ProductCardModal = ({
             />
             <div className="content-box">
               <div className="scroll-content">
-                <div className="product-size-container">
-                  {productSize.map((item, index) => (
-                    <div
-                      key={index}
-                      className={`product-size-item ${
-                        item.id === activeSize ? "active" : ""
-                      }`}
-                      onClick={() => setActiveSize(item.id)}
-                    >
-                      {item.size}
+                {product?.itemSizes.length > 1 ? (
+                  <>
+                    <div className="product-size-container">
+                      {product?.itemSizes.map((item, index) => (
+                        <div
+                          key={index}
+                          className={`product-size-item ${
+                            item._id === activeSize ? "active" : ""
+                          }`}
+                          onClick={() => activateSize(item._id)}
+                        >
+                          {item.name}
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
+                  </>
+                ) : (
+                  ""
+                )}
                 <h3 className="product-name">{product.name}</h3>
-                <p className="product-desc">
-                  {showFullDescription ? fullDescription : truncatedDescription}
+                <p
+                  className={`product-desc product-desc_${
+                    showFullDescription ? "hidden" : "show"
+                  }`}
+                >
+                  {product?.description}
                 </p>
                 <button
                   className="show-more"
@@ -186,25 +197,43 @@ export const ProductCardModal = ({
                 <span className="nutrition-label">В 100 г. продукта</span>
                 <div className="nutrition">
                   <div>
-                    <h3>138</h3>
+                    <h3>
+                      {productAcc
+                        ? productAcc?.nutritionPerHundredGrams?.kilocalories
+                        : 0}
+                    </h3>
                     <span>ккал</span>
                   </div>
                   <div>
-                    <h3>7</h3>
+                    <h3>
+                      {productAcc
+                        ? productAcc?.nutritionPerHundredGrams?.proteins
+                        : 0}
+                    </h3>
                     <span>белки</span>
                   </div>
                   <div>
-                    <h3>5</h3>
+                    <h3>
+                      {productAcc
+                        ? productAcc?.nutritionPerHundredGrams?.fats
+                        : 0}
+                    </h3>
                     <span>жиры</span>
                   </div>
                   <div>
-                    <h3>16</h3>
+                    <h3>
+                      {productAcc
+                        ? productAcc?.nutritionPerHundredGrams?.carbs
+                        : 0}
+                    </h3>
                     <span>углеводы</span>
                   </div>
                 </div>
               </div>
               <div className="product-footer">
-                <span className="price">Цена: {product.price}</span>
+                <span className="price">
+                  Цена: {productAcc ? productAcc.price : 0}
+                </span>
 
                 {isInCart ? (
                   <CounterBtn

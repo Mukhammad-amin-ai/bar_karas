@@ -361,6 +361,7 @@
   overflow: hidden;
   transition: max-height 0.3s ease;
 }
+
 .scroll-content {
   height: 215px;
   overflow-y: auto;
@@ -368,8 +369,22 @@
     display: none;
   }
 }
+
 .product-desc.expanded {
   max-height: none;
+}
+
+.product-desc_show {
+  -webkit-line-clamp: 100;
+  -webkit-box-orient: vertical;
+  display: -webkit-box;
+  overflow: hidden;
+}
+.product-desc_hidden {
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  display: -webkit-box;
+  overflow: hidden;
 }
 
 .order-modal {
