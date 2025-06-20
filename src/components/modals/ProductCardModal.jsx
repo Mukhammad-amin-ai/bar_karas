@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
-import assets from "../../assets";
 import { Button } from "../button/Button";
 import { CounterBtn } from "../counter-btn/CounterBtn";
+import assets from "../../assets";
 import "./modal.scss";
 
 export const ProductCardModal = ({
@@ -96,10 +96,10 @@ export const ProductCardModal = ({
     const updatedCart = { ...cartItems };
 
     if (newQuantity <= 0) {
-      delete updatedCart[product.id];
+      delete updatedCart[product._id];
     } else {
-      updatedCart[product.id] = {
-        ...updatedCart[product.id],
+      updatedCart[product._id] = {
+        ...updatedCart[product._id],
         quantity: newQuantity,
       };
     }
@@ -115,8 +115,7 @@ export const ProductCardModal = ({
     );
   };
 
-  // product-desc
-  const isInCart = product && cartItems[product.id];
+  const isInCart = product && cartItems[product._id];
 
   const [activeSize, setActiveSize] = useState(1);
   const [productAcc, setProductAcc] = useState("");
@@ -127,7 +126,6 @@ export const ProductCardModal = ({
       if (defaultSize) {
         setActiveSize(defaultSize.id);
         setProductAcc(defaultSize);
-        console.log(defaultSize);
       }
     }
   }, [product]);
@@ -237,12 +235,12 @@ export const ProductCardModal = ({
 
                 {isInCart ? (
                   <CounterBtn
-                    count={cartItems[product.id].quantity}
+                    count={cartItems[product._id].quantity}
                     onIncrement={() =>
-                      handleQuantityChange(cartItems[product.id].quantity + 1)
+                      handleQuantityChange(cartItems[product._id].quantity + 1)
                     }
                     onDecrement={() =>
-                      handleQuantityChange(cartItems[product.id].quantity - 1)
+                      handleQuantityChange(cartItems[product._id].quantity - 1)
                     }
                   />
                 ) : (

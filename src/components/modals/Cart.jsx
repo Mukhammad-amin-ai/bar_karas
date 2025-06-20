@@ -145,8 +145,8 @@ export const Cart = ({ className, cartItems, setCartItems, onClose }) => {
                     <div>
                       <h4 className="product-name">{item.name}</h4>
                       <div className="price-box">
-                        <span className="price">{item.price}</span>
-                        <span className="weight">{item.weight}</span>
+                        <span className="price">{item.price} ₽</span>
+                        <span className="weight">{item.weight} г</span>
                       </div>
                     </div>
                   </div>

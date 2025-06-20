@@ -94,7 +94,7 @@ export const Home = () => {
 
   const handleAddToCart = (product) => {
     const existingItemIndex = cartItems.findIndex(
-      (item) => item.id === product.id
+      (item) => item._id === product._id
     );
 
     let updatedCartItems;
@@ -112,7 +112,7 @@ export const Home = () => {
     setShowBottomModal(true);
 
     const cartObject = updatedCartItems.reduce((acc, item) => {
-      acc[item.id] = item;
+      acc[item._id] = item;
       return acc;
     }, {});
     localStorage.setItem("cartItems", JSON.stringify(cartObject));
