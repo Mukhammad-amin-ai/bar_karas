@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Header } from "../../components/header/Header";
+import { FetchMenu } from "./module";
 import {
   BottomCardModal,
   Cart,
@@ -11,8 +12,6 @@ import {
   ProductCardModal,
   ProductsList,
 } from "../../components";
-import { FetchMenu } from "./module";
-
 import "./home.scss";
 
 export const Home = () => {
@@ -93,80 +92,6 @@ export const Home = () => {
     });
   };
 
-  const handleAddToCart = (product, activeSize) => {
-    const existingItemIndex = cartItems.findIndex(
-      (item) => item._id === product._id
-    );
-
-    let updatedCartItems;
-    if (existingItemIndex >= 0) {
-      updatedCartItems = cartItems.map((item, index) =>
-        index === existingItemIndex
-          ? { ...item, quantity: item.quantity + 1 }
-          : item
-      );
-    } else {
-      updatedCartItems = [
-        ...cartItems,
-        { ...product, activeSizeId: activeSize, quantity: 1 },
-      ];
-    }
-
-    setCartItems(updatedCartItems);
-    setShowBottomModal(true);
-
-    const cartObject = updatedCartItems.reduce((acc, item) => {
-      acc[item._id] = item;
-      return acc;
-    }, {});
-    localStorage.setItem("cartItems", JSON.stringify(cartObject));
-
-    window.dispatchEvent(
-      new CustomEvent("cartUpdated", {
-        detail: { cartItems: cartObject },
-      })
-    );
-  };
-
-  // API INTEGRATION ===================================
-
-  // const handleAddToCart = (product, activeSizeId) => {
-  //   // Найдём, есть ли такой же продукт с тем же размером
-  //   const existingItemIndex = cartItems.findIndex(
-  //     (item) => item._id === product._id && item.activeSizeId === activeSizeId
-  //   );
-
-  //   let updatedCartItems;
-
-  //   if (existingItemIndex >= 0) {
-  //     updatedCartItems = cartItems.map((item, index) =>
-  //       index === existingItemIndex
-  //         ? { ...item, quantity: item.quantity + 1 }
-  //         : item
-  //     );
-  //   } else {
-  //     updatedCartItems = [
-  //       ...cartItems,
-  //       {
-  //         ...product,
-  //         activeSizeId,
-  //         quantity: 1,
-  //       },
-  //     ];
-  //   }
-
-  //   setCartItems(updatedCartItems);
-  //   setShowBottomModal(true);
-
-  //   localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
-
-  //   window.dispatchEvent(
-  //     new CustomEvent("cartUpdated", {
-  //       detail: { cartItems: updatedCartItems },
-  //     })
-  //   );
-  // };
-
   const category = useSelector((state) => state.menu.category);
 
   useEffect(() => {
@@ -177,8 +102,8 @@ export const Home = () => {
         },
       })
     );
-  }, [dispatch]);
-  
+  }, [dispatch, restaurant]);
+
   // ===================================================
 
   return (
@@ -194,7 +119,6 @@ export const Home = () => {
         className={modals.productCard ? "show" : ""}
         product={selectedProduct}
         onClose={handleCloseModal}
-        onAddToCart={handleAddToCart}
       />
 
       <Cart

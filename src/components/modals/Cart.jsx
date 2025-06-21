@@ -69,23 +69,52 @@ export const Cart = ({ className, cartItems, setCartItems, onClose }) => {
     };
   }, [isSwiping, translateY, onClose]);
 
-  const incrementQuantity = (id) => {
-    setCartItems(
-      cartItems.map((item) =>
-        item.id === id ? { ...item, quantity: item.quantity + 1 } : item
-      )
+  const handleQuantityChange = (currentCartItem, newQuantity) => {
+    const updatedCart = [...cartItems];
+
+    const itemIndex = updatedCart.findIndex(
+      (item) =>
+        item.id === currentCartItem.id && item.sizeId === currentCartItem.sizeId
+    );
+
+
+    if (itemIndex !== -1) {
+      if (newQuantity <= 0) {
+        updatedCart.splice(itemIndex, 1);
+      } else {
+        updatedCart[itemIndex].quantity = newQuantity;
+      }
+    }
+
+    setCartItems(updatedCart);
+    localStorage.setItem("cartItems", JSON.stringify(updatedCart));
+
+    window.dispatchEvent(
+      new CustomEvent("cartUpdated", {
+        detail: { cartItems: updatedCart },
+      })
     );
   };
 
-  const decrementQuantity = (id) => {
-    setCartItems(
-      cartItems
-        .map((item) =>
-          item.id === id ? { ...item, quantity: item.quantity - 1 } : item
-        )
-        .filter((item) => item.id !== id || item.quantity > 0)
-    );
-  };
+  // const incrementQuantity = (id) => {
+  //   console.log(id);
+
+  //   // setCartItems(
+  //   //   cartItems.map((item) =>
+  //   //     item.id === id ? { ...item, quantity: item.quantity + 1 } : item
+  //   //   )
+  //   // );
+  // };
+
+  // const decrementQuantity = (id) => {
+  //   setCartItems(
+  //     cartItems
+  //       .map((item) =>
+  //         item.id === id ? { ...item, quantity: item.quantity - 1 } : item
+  //       )
+  //       .filter((item) => item.id !== id || item.quantity > 0)
+  //   );
+  // };
 
   const clearCart = () => {
     setCartItems([]);
@@ -139,7 +168,7 @@ export const Cart = ({ className, cartItems, setCartItems, onClose }) => {
                   <div className="left-box">
                     <img
                       className="product-img"
-                      src={item.img || "/placeholder.svg"}
+                      src={item.image || "/placeholder.svg"}
                       alt={item.name}
                     />
                     <div>
@@ -153,14 +182,18 @@ export const Cart = ({ className, cartItems, setCartItems, onClose }) => {
                   <div className="counter">
                     <button
                       className="decrement"
-                      onClick={() => decrementQuantity(item.id)}
+                      onClick={() =>
+                        handleQuantityChange(item, item.quantity - 1)
+                      }
                     >
                       <img src={assets.minus || "/placeholder.svg"} alt="" />
                     </button>
                     <span className="count">{item.quantity}</span>
                     <button
                       className="increment"
-                      onClick={() => incrementQuantity(item.id)}
+                      onClick={() =>
+                        handleQuantityChange(item, item.quantity + 1)
+                      }
                     >
                       <img src={assets.plus || "/placeholder.svg"} alt="" />
                     </button>

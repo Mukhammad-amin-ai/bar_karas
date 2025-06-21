@@ -113,6 +113,7 @@ export const ProductCardModal = ({ product, className, onClose }) => {
         sizeIndex: sizeIndex,
         sizeId: size._id,
         quantity: 1,
+        weight: product.weight,
       };
 
       dispatch(addToCart({ product, itemSizeIndex: sizeIndex }));
@@ -138,8 +139,6 @@ export const ProductCardModal = ({ product, className, onClose }) => {
       (item) =>
         item.id === currentCartItem.id && item.sizeId === currentCartItem.sizeId
     );
-
-    console.log("Found item at index:", itemIndex);
 
     if (itemIndex !== -1) {
       if (newQuantity <= 0) {

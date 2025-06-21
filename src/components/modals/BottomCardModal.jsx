@@ -1,19 +1,18 @@
 "use client";
 
-import assets from "../../assets";
 import { Button } from "../button/Button";
+import assets from "../../assets";
 import "./modal.scss";
 
 export const BottomCardModal = ({ cartItems, onClick, className = "" }) => {
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
   const totalPrice = cartItems.reduce((sum, item) => {
-    // const price = Number.parseInt(item.price.replace(/\D/g, ''));
     const price = item.price;
     return sum + price * item.quantity;
   }, 0);
 
   return (
-    <div className={`bottom-card__modal ${className}`}>
+    <div className={`bottom-card__modal ${className}`} onClick={onClick}>
       <div className="left-box">
         <div className="img-box">
           <img src={assets.cardIcon || "/placeholder.svg"} alt="" />
@@ -25,7 +24,7 @@ export const BottomCardModal = ({ cartItems, onClick, className = "" }) => {
           <span>На сумму {totalPrice} ₽</span>
         </div>
       </div>
-      <Button icon={assets.nextArrow} type="button" onClick={onClick} />
+      <Button icon={assets.nextArrow} type="button" />
     </div>
   );
 };

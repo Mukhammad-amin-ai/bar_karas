@@ -43,6 +43,7 @@ export const ProductItem = ({ product, onProductClick }) => {
       sizeIndex: defaultIndex,
       sizeId: size._id,
       quantity: 1,
+      weight: product.weight,
     };
 
     dispatch(addToCart({ product, itemSizeIndex: defaultIndex }));
@@ -63,7 +64,7 @@ export const ProductItem = ({ product, onProductClick }) => {
       .map((item) =>
         item.id === itemId ? { ...item, quantity: newQuantity } : item
       )
-      .filter((item) => item.quantity > 0); 
+      .filter((item) => item.quantity > 0);
 
     setCartItems(updatedCart);
     localStorage.setItem("cartItems", JSON.stringify(updatedCart));

@@ -32,6 +32,7 @@ const PRODUCT = createSlice({
           sizeIndex: itemSizeIndex,
           sizeId: size._id,
           quantity: 1,
+          weight: product.weight,
         });
       }
 
