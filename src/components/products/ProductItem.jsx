@@ -1,16 +1,19 @@
 import { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Button } from "../button/Button";
 import { CounterBtn } from "../counter-btn/CounterBtn";
 import { ProductSkeleton } from "../skeleton/ProductSkeleton";
+import { addToCart, AddToCart, CatchProduct } from "./module";
 import "./products.scss";
 
 export const ProductItem = ({ product, onProductClick }) => {
-  const [cartItems, setCartItems] = useState({});
+  const [cartItems, setCartItems] = useState([]);
+  const dispatch = useDispatch();
+  const loading = useSelector((state) => state.menu.loading);
 
   useEffect(() => {
     const savedCart = localStorage.getItem("cartItems");
-    if (savedCart) {
+    if (savedCart && savedCart.length > 0) {
       setCartItems(JSON.parse(savedCart));
     }
   }, []);
@@ -20,22 +23,31 @@ export const ProductItem = ({ product, onProductClick }) => {
       const { cartItems: updatedCartItems } = event.detail;
       setCartItems(updatedCartItems);
     };
-
     window.addEventListener("cartUpdated", handleCartUpdate);
     return () => window.removeEventListener("cartUpdated", handleCartUpdate);
   }, []);
 
-  const handleAddToCart = (item, e) => {
+  const handleAddToCart = (product, findDefault, e) => {
     e.stopPropagation();
-
-    const updatedCart = {
-      ...cartItems,
-      [item._id]: {
-        ...item,
-        quantity: 1,
-      },
+    e.preventDefault();
+    const defaultIndex = product.itemSizes.findIndex((s) => s.isDefault);
+    const size = product.itemSizes[defaultIndex];
+    const structuredItem = {
+      id: product._id,
+      name: product.name,
+      category: product.category,
+      restaurant: product.restaurant,
+      image: product.img || size.image,
+      price: size.price,
+      sizeName: size.name,
+      sizeIndex: defaultIndex,
+      sizeId: size._id,
+      quantity: 1,
     };
 
+    dispatch(addToCart({ product, itemSizeIndex: defaultIndex }));
+
+    const updatedCart = [...cartItems, structuredItem];
     setCartItems(updatedCart);
     localStorage.setItem("cartItems", JSON.stringify(updatedCart));
 
@@ -47,16 +59,11 @@ export const ProductItem = ({ product, onProductClick }) => {
   };
 
   const handleQuantityChange = (itemId, newQuantity) => {
-    const updatedCart = { ...cartItems };
-
-    if (newQuantity <= 0) {
-      delete updatedCart[itemId];
-    } else {
-      updatedCart[itemId] = {
-        ...updatedCart[itemId],
-        quantity: newQuantity,
-      };
-    }
+    const updatedCart = cartItems
+      .map((item) =>
+        item.id === itemId ? { ...item, quantity: newQuantity } : item
+      )
+      .filter((item) => item.quantity > 0); 
 
     setCartItems(updatedCart);
     localStorage.setItem("cartItems", JSON.stringify(updatedCart));
@@ -68,7 +75,10 @@ export const ProductItem = ({ product, onProductClick }) => {
     );
   };
 
-  const loading = useSelector((state) => state.menu.loading);
+  let productShow = (item) => {
+    dispatch(CatchProduct(item));
+    onProductClick(item);
+  };
 
   return (
     <div className="product-category">
@@ -88,7 +98,7 @@ export const ProductItem = ({ product, onProductClick }) => {
                 <div
                   key={index}
                   className="product-card"
-                  onClick={() => onProductClick(item)}
+                  onClick={() => productShow(item)}
                 >
                   <img
                     className="product-img"
@@ -100,31 +110,63 @@ export const ProductItem = ({ product, onProductClick }) => {
                     <h4 className="product-name line-clamp-1">{item.name}</h4>
                     <span className="product-weight">{item.weight} г</span>
                   </div>
+                  {/* 
+                  {(() => {
+                    const cartItem = cartItems.find((ci) => ci.id === item._id);
+                    return cartItem ? (
+                      <CounterBtn
+                        count={cartItem.quantity}
+                        onIncrement={(e) => {
+                          e.stopPropagation();
+                          handleQuantityChange(item._id, cartItem.quantity + 1);
+                        }}
+                        onDecrement={(e) => {
+                          e.stopPropagation();
+                          handleQuantityChange(item._id, cartItem.quantity - 1);
+                        }}
+                      />
+                    ) : (
+                      <Button
+                        label="Добавить"
+                        onClick={(e) => handleAddToCart(item, e)}
+                      />
+                    );
+                  })()} */}
+                  {(() => {
+                    const cartItem = cartItems.find((ci) => ci.id === item._id);
+                    if (cartItem) {
+                      return (
+                        <CounterBtn
+                          count={cartItem.quantity}
+                          onIncrement={(e) => {
+                            e.stopPropagation();
+                            handleQuantityChange(
+                              item._id,
+                              cartItem.quantity + 1
+                            );
+                          }}
+                          onDecrement={(e) => {
+                            e.stopPropagation();
+                            handleQuantityChange(
+                              item._id,
+                              cartItem.quantity - 1
+                            );
+                          }}
+                        />
+                      );
+                    }
 
-                  {cartItems[item._id] ? (
-                    <CounterBtn
-                      count={cartItems[item._id].quantity}
-                      onIncrement={(e) => {
-                        e.stopPropagation();
-                        handleQuantityChange(
-                          item._id,
-                          cartItems[item._id].quantity + 1
-                        );
-                      }}
-                      onDecrement={(e) => {
-                        e.stopPropagation();
-                        handleQuantityChange(
-                          item._id,
-                          cartItems[item._id].quantity - 1
-                        );
-                      }}
-                    />
-                  ) : (
-                    <Button
-                      label="Добавить"
-                      onClick={(e) => handleAddToCart(item, e)}
-                    />
-                  )}
+                    const findDefault = item.itemSizes.find(
+                      (itemC) => itemC.isDefault
+                    );
+
+                    return findDefault ? (
+                      <Button
+                        label="Добавить"
+                        onClick={(e) => handleAddToCart(item, findDefault, e)}
+                      />
+                    ) : null;
+                  })()}
                 </div>
               ))}
             </>

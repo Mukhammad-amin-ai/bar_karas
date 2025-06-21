@@ -156,7 +156,7 @@ export const ProductsList = ({ onProductClick, showBottomModal }) => {
   return (
     <div className={`products ${showBottomModal ? "bottom-el" : ""}`}>
       <div className="products-container">
-        {productsDB.map((category, index) => {
+        {productsDB?.map((category, index) => {
           const categorySlug = category.productCategory
             .toLowerCase()
             .replace(/\s+/g, "-");

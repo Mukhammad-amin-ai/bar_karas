@@ -1,6 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Header } from "../../components/header/Header";
 import {
   BottomCardModal,
   Cart,
@@ -8,11 +11,9 @@ import {
   ProductCardModal,
   ProductsList,
 } from "../../components";
-import { Header } from "../../components/header/Header";
-import { useDispatch, useSelector } from "react-redux";
 import { FetchMenu } from "./module";
+
 import "./home.scss";
-import { useParams } from "react-router-dom";
 
 export const Home = () => {
   const dispatch = useDispatch();
@@ -92,7 +93,7 @@ export const Home = () => {
     });
   };
 
-  const handleAddToCart = (product) => {
+  const handleAddToCart = (product, activeSize) => {
     const existingItemIndex = cartItems.findIndex(
       (item) => item._id === product._id
     );
@@ -105,7 +106,10 @@ export const Home = () => {
           : item
       );
     } else {
-      updatedCartItems = [...cartItems, { ...product, quantity: 1 }];
+      updatedCartItems = [
+        ...cartItems,
+        { ...product, activeSizeId: activeSize, quantity: 1 },
+      ];
     }
 
     setCartItems(updatedCartItems);
@@ -125,6 +129,44 @@ export const Home = () => {
   };
 
   // API INTEGRATION ===================================
+
+  // const handleAddToCart = (product, activeSizeId) => {
+  //   // Найдём, есть ли такой же продукт с тем же размером
+  //   const existingItemIndex = cartItems.findIndex(
+  //     (item) => item._id === product._id && item.activeSizeId === activeSizeId
+  //   );
+
+  //   let updatedCartItems;
+
+  //   if (existingItemIndex >= 0) {
+  //     updatedCartItems = cartItems.map((item, index) =>
+  //       index === existingItemIndex
+  //         ? { ...item, quantity: item.quantity + 1 }
+  //         : item
+  //     );
+  //   } else {
+  //     updatedCartItems = [
+  //       ...cartItems,
+  //       {
+  //         ...product,
+  //         activeSizeId,
+  //         quantity: 1,
+  //       },
+  //     ];
+  //   }
+
+  //   setCartItems(updatedCartItems);
+  //   setShowBottomModal(true);
+
+  //   localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
+
+  //   window.dispatchEvent(
+  //     new CustomEvent("cartUpdated", {
+  //       detail: { cartItems: updatedCartItems },
+  //     })
+  //   );
+  // };
+
   const category = useSelector((state) => state.menu.category);
 
   useEffect(() => {
@@ -136,6 +178,7 @@ export const Home = () => {
       })
     );
   }, [dispatch]);
+  
   // ===================================================
 
   return (

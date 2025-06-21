@@ -3,15 +3,17 @@ import { Button } from "../button/Button";
 import { CounterBtn } from "../counter-btn/CounterBtn";
 import assets from "../../assets";
 import "./modal.scss";
+import { useDispatch } from "react-redux";
+import { addToCart, AddToCart } from "../products/module";
 
-export const ProductCardModal = ({
-  product,
-  className,
-  onClose,
-  onAddToCart,
-}) => {
+export const ProductCardModal = ({ product, className, onClose }) => {
+  const [activeSize, setActiveSize] = useState(null);
+  const [choosedIndex, setChoosedIndex] = useState(null);
+  const [productAcc, setProductAcc] = useState("");
+
+  const dispatch = useDispatch();
   const [showFullDescription, setShowFullDescription] = useState(true);
-  const [cartItems, setCartItems] = useState({});
+  const [cartItems, setCartItems] = useState([]);
   const [isSwiping, setIsSwiping] = useState(false);
   const [translateY, setTranslateY] = useState(0);
   const touchStartY = useRef(0);
@@ -84,29 +86,71 @@ export const ProductCardModal = ({
     };
   }, [isSwiping, translateY, onClose]);
 
-  const handleAddToCart = () => {
+  const handleAddToCart = (e) => {
+    e.preventDefault();
     if (!product) return;
 
-    onAddToCart(product);
+    const exist = cartItems?.find(
+      (item) => item.id === product._id && item.sizeId === activeSize
+    );
+
+    if (!exist) {
+      const sizeIndex =
+        typeof choosedIndex === "number"
+          ? choosedIndex
+          : product.itemSizes.findIndex((s) => s.isDefault);
+
+      const size = product.itemSizes[sizeIndex];
+
+      const structuredItem = {
+        id: product._id,
+        name: product.name,
+        category: product.category,
+        restaurant: product.restaurant,
+        image: product.img || size.image,
+        price: size.price,
+        sizeName: size.name,
+        sizeIndex: sizeIndex,
+        sizeId: size._id,
+        quantity: 1,
+      };
+
+      dispatch(addToCart({ product, itemSizeIndex: sizeIndex }));
+
+      const updatedCart = [...cartItems, structuredItem];
+      setCartItems(updatedCart);
+      localStorage.setItem("cartItems", JSON.stringify(updatedCart));
+
+      window.dispatchEvent(
+        new CustomEvent("cartUpdated", {
+          detail: { cartItems: updatedCart },
+        })
+      );
+    }
   };
 
-  const handleQuantityChange = (newQuantity) => {
+  const handleQuantityChange = (currentCartItem, newQuantity) => {
     if (!product) return;
 
-    const updatedCart = { ...cartItems };
+    const updatedCart = [...cartItems];
 
-    if (newQuantity <= 0) {
-      delete updatedCart[product._id];
-    } else {
-      updatedCart[product._id] = {
-        ...updatedCart[product._id],
-        quantity: newQuantity,
-      };
+    const itemIndex = updatedCart.findIndex(
+      (item) =>
+        item.id === currentCartItem.id && item.sizeId === currentCartItem.sizeId
+    );
+
+    console.log("Found item at index:", itemIndex);
+
+    if (itemIndex !== -1) {
+      if (newQuantity <= 0) {
+        updatedCart.splice(itemIndex, 1);
+      } else {
+        updatedCart[itemIndex].quantity = newQuantity;
+      }
     }
 
-    localStorage.setItem("cartItems", JSON.stringify(updatedCart));
-
     setCartItems(updatedCart);
+    localStorage.setItem("cartItems", JSON.stringify(updatedCart));
 
     window.dispatchEvent(
       new CustomEvent("cartUpdated", {
@@ -115,26 +159,29 @@ export const ProductCardModal = ({
     );
   };
 
-  const isInCart = product && cartItems[product._id];
-
-  const [activeSize, setActiveSize] = useState(1);
-  const [productAcc, setProductAcc] = useState("");
-
   useEffect(() => {
     if (product?.itemSizes?.length > 0) {
       const defaultSize = product.itemSizes.find((item) => item.isDefault);
+      const defaultIndex = product.itemSizes.findIndex((s) => s.isDefault);
       if (defaultSize) {
-        setActiveSize(defaultSize.id);
+        setActiveSize(defaultSize._id);
         setProductAcc(defaultSize);
+        setChoosedIndex(defaultIndex);
       }
     }
   }, [product]);
 
   const activateSize = (itemId) => {
+    const sizeIndex = product.itemSizes.findIndex((s) => s._id === itemId);
+    setChoosedIndex(sizeIndex);
     setActiveSize(itemId);
     const defaultSize = product.itemSizes.find((item) => item._id === itemId);
     setProductAcc(defaultSize);
   };
+
+  const currentCartItem = cartItems?.find(
+    (item) => item.id === product?._id && item.sizeId === activeSize
+  );
 
   return (
     <div className={`product-card__modal modal ${className}`}>
@@ -232,19 +279,27 @@ export const ProductCardModal = ({
                 <span className="price">
                   Цена: {productAcc ? productAcc.price : 0}
                 </span>
-
-                {isInCart ? (
+                {currentCartItem ? (
                   <CounterBtn
-                    count={cartItems[product._id].quantity}
+                    count={currentCartItem.quantity}
                     onIncrement={() =>
-                      handleQuantityChange(cartItems[product._id].quantity + 1)
+                      handleQuantityChange(
+                        currentCartItem,
+                        currentCartItem.quantity + 1
+                      )
                     }
                     onDecrement={() =>
-                      handleQuantityChange(cartItems[product._id].quantity - 1)
+                      handleQuantityChange(
+                        currentCartItem,
+                        currentCartItem.quantity - 1
+                      )
                     }
                   />
                 ) : (
-                  <Button label="Добавить" onClick={handleAddToCart} />
+                  <Button
+                    label="Добавить"
+                    onClick={(e) => handleAddToCart(e)}
+                  />
                 )}
               </div>
             </div>
