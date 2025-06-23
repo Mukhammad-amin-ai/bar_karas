@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Header } from "../../components/header/Header";
+import { Header } from "../../components/index.js";
 import { FetchMenu } from "./module";
 import {
   BottomCardModal,
