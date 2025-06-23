@@ -11,10 +11,24 @@ export const ProductItem = ({product, onProductClick}) => {
     const dispatch = useDispatch();
     const loading = useSelector((state) => state.menu.loading);
 
+    // useEffect(() => {
+    //     const savedCart = localStorage.getItem("cartItems");
+    //     if (savedCart && savedCart.length > 0) {
+    //         setCartItems(JSON.parse(savedCart));
+    //     }
+    // }, []);
     useEffect(() => {
         const savedCart = localStorage.getItem("cartItems");
-        if (savedCart && savedCart.length > 0) {
-            setCartItems(JSON.parse(savedCart));
+        try {
+            const parsed = JSON.parse(savedCart);
+            if (Array.isArray(parsed)) {
+                setCartItems(parsed);
+            } else {
+                setCartItems([]); // fallback to empty array
+            }
+        } catch (error) {
+            console.error("Error parsing cartItems from localStorage", error);
+            setCartItems([]); // fallback
         }
     }, []);
 
@@ -115,16 +129,14 @@ export const ProductItem = ({product, onProductClick}) => {
                                     {(() => {
                                         const defaultSize = item.itemSizes.find((s) => s.isDefault);
                                         if (!defaultSize) return null;
-
                                         const matchingCartItems = cartItems.filter(
                                             (ci) => ci.id === item._id && ci.sizeId === defaultSize._id
                                         );
 
-                                        const totalQuantity = matchingCartItems.reduce(
+                                        const totalQuantity = matchingCartItems?.reduce(
                                             (sum, ci) => sum + ci.quantity,
                                             0
                                         );
-
                                         if (totalQuantity > 0) {
                                             return (
                                                 <CounterBtn
@@ -140,7 +152,6 @@ export const ProductItem = ({product, onProductClick}) => {
                                                 />
                                             );
                                         }
-
                                         return (
                                             <Button
                                                 label="Добавить"
