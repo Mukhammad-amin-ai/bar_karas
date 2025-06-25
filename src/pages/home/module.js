@@ -25,13 +25,16 @@ export const MENU = createSlice({
 
 export const { CategoryMutate, setLoading, CategoryListMutate } = MENU.actions;
 
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 export const FetchMenu = (option) => async (dispatch) => {
+  dispatch(setLoading(true)); // включаем сразу
+
   try {
-    dispatch(setLoading(true));
     const response = await axiosInstance.get("/menu", option);
 
     if (response.status === 200) {
-      let data = response.data[0]?.itemCategories;
+      const data = response.data[0]?.itemCategories;
 
       const category = data?.map((item, index) => ({
         id: index + 1,
@@ -47,19 +50,16 @@ export const FetchMenu = (option) => async (dispatch) => {
         active: index === 0,
       }));
 
-      dispatch(CategoryListMutate(categoryList));
-      dispatch(CategoryMutate(category));
-      if (category) {
-        setTimeout(() => {
-          dispatch(setLoading(false));
-        }, 1000);
-      }
-    } else {
-      dispatch(setLoading(false));
+      await Promise.all([
+        dispatch(CategoryListMutate(categoryList)),
+        dispatch(CategoryMutate(category)),
+      ]);
     }
   } catch (e) {
+    console.error("Error fetching menu:", e);
+  } finally {
+    await delay(100);
     dispatch(setLoading(false));
-    console.error(e);
   }
 };
 
