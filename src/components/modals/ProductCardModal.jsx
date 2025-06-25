@@ -172,7 +172,6 @@ export const ProductCardModal = ({ product, className, onClose }) => {
 
   const activateSize = (itemId) => {
     console.time("activateSize");
-
     const sizeIndex = product.itemSizes.findIndex((s) => s._id === itemId);
     const defaultSize = product.itemSizes.find((item) => item._id === itemId);
     startTransition(() => {
@@ -219,7 +218,12 @@ export const ProductCardModal = ({ product, className, onClose }) => {
           <div className="parent-content">
             <img
               className="product-img"
-              src={product.img || "/placeholder.svg"}
+              src={
+                productAcc?.image
+                  ? productAcc?.image || product.img
+                  : "/placeholder.svg"
+              }
+              loading="lazy"
               alt={product.name}
             />
             <div className="content-box">
@@ -227,17 +231,6 @@ export const ProductCardModal = ({ product, className, onClose }) => {
                 {product?.itemSizes.length > 1 ? (
                   <>
                     <div className="product-size-container">
-                      {/* {product?.itemSizes.map((item, index) => (
-                        <div
-                          key={index}
-                          className={`product-size-item ${
-                            item._id === activeSize ? "active" : ""
-                          }`}
-                          onClick={() => activateSize(item._id)}
-                        >
-                          {item.name}
-                        </div>
-                      ))} */}
                       {renderedSizes}
                     </div>
                   </>

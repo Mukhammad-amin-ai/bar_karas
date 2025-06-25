@@ -11,12 +11,6 @@ export const ProductItem = ({product, onProductClick}) => {
     const dispatch = useDispatch();
     const loading = useSelector((state) => state.menu.loading);
 
-    // useEffect(() => {
-    //     const savedCart = localStorage.getItem("cartItems");
-    //     if (savedCart && savedCart.length > 0) {
-    //         setCartItems(JSON.parse(savedCart));
-    //     }
-    // }, []);
     useEffect(() => {
         const savedCart = localStorage.getItem("cartItems");
         try {
@@ -118,6 +112,7 @@ export const ProductItem = ({product, onProductClick}) => {
                                     <img
                                         className="product-img"
                                         src={item.img || "/placeholder.svg"}
+                                        loading="lazy"
                                         alt={item.name}
                                     />
                                     <div className="product-card__content">
