@@ -240,7 +240,7 @@
       line-height: 20px;
       text-align: center;
       will-change: background-color, font-weight;
-      user-select: none;
+      user-select: none !important;
       cursor: pointer;
       &.active {
         border-radius: 8px;

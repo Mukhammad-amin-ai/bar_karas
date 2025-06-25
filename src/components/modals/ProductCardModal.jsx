@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef, useMemo, startTransition } from "react";
 import { useDispatch } from "react-redux";
 import { Button } from "../button/Button";
 import { CounterBtn } from "../counter-btn/CounterBtn";
@@ -171,13 +171,16 @@ export const ProductCardModal = ({ product, className, onClose }) => {
   }, [product]);
 
   const activateSize = (itemId) => {
-    const sizeIndex = product.itemSizes.findIndex((s) => s._id === itemId);
-    setChoosedIndex(sizeIndex);
     console.time("activateSize");
-    setActiveSize(itemId);
-    console.timeEnd("activateSize");
+
+    const sizeIndex = product.itemSizes.findIndex((s) => s._id === itemId);
     const defaultSize = product.itemSizes.find((item) => item._id === itemId);
-    setProductAcc(defaultSize);
+    startTransition(() => {
+      setChoosedIndex(sizeIndex);
+      setActiveSize(itemId);
+      setProductAcc(defaultSize);
+    });
+    console.timeEnd("activateSize");
   };
 
   const currentCartItem = cartItems?.find(
