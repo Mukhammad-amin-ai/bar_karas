@@ -27,34 +27,38 @@ export const { CategoryMutate, setLoading, CategoryListMutate } = MENU.actions;
 
 export const FetchMenu = (option) => async (dispatch) => {
   try {
+    dispatch(setLoading(true));
     const response = await axiosInstance.get("/menu", option);
-    let category;
-    let categoryList;
+
     if (response.status === 200) {
       let data = response.data[0]?.itemCategories;
-      category = data?.map((item, index) => {
-        return {
-          id: index + 1,
-          restaurant: item.restaurant,
-          productCategory: item.name,
-          products: item.items,
-        };
-      });
 
-      categoryList = data?.map((item, index) => {
-        return {
-          id: index + 1,
-          restaurant: item.restaurant,
-          label: item.name,
-          active: index === 0,
-        };
-      });
-      dispatch(setLoading(false));
+      const category = data?.map((item, index) => ({
+        id: index + 1,
+        restaurant: item.restaurant,
+        productCategory: item.name,
+        products: item.items,
+      }));
+
+      const categoryList = data?.map((item, index) => ({
+        id: index + 1,
+        restaurant: item.restaurant,
+        label: item.name,
+        active: index === 0,
+      }));
+
       dispatch(CategoryListMutate(categoryList));
       dispatch(CategoryMutate(category));
+      if (category) {
+        setTimeout(() => {
+          dispatch(setLoading(false));
+        }, 1000);
+      }
+    } else {
+      dispatch(setLoading(false));
     }
   } catch (e) {
-    dispatch(setLoading(true));
+    dispatch(setLoading(false));
     console.error(e);
   }
 };

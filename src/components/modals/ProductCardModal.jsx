@@ -223,6 +223,7 @@ export const ProductCardModal = ({ product, className, onClose }) => {
                   ? productAcc?.image || product.img
                   : "/placeholder.svg"
               }
+              height="320"
               loading="lazy"
               alt={product.name}
             />

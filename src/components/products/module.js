@@ -95,35 +95,5 @@ export const AddToCart = (product, ProductSize) => async () => {
   }
 };
 
-// export const AddToCart = (product, ProductSize) => async () => {
-//   const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
-
-//   // Проверка: существует ли элемент с тем же id и sizeId
-//   const itemExists = cartItems.some(
-//     (cart) => cart.id === product._id && cart.sizeId === ProductSize
-//   );
-
-//   if (!itemExists) {
-//     const selectedSize =
-//       product.itemSizes.find((item) => item._id === ProductSize) ||
-//       product.itemSizes.find((item) => item.isDefault);
-
-//     if (!selectedSize) return; // safety check
-
-//     const structure = {
-//       id: product._id,
-//       name: product.name,
-//       img: selectedSize.image,
-//       category: product.category,
-//       restaurant: product.restaurant,
-//       sizeId: selectedSize._id,
-//       price: selectedSize.price,
-//       quantity: 1,
-//     };
-
-//     const updatedCart = [...cartItems, structure];
-//     localStorage.setItem("cartItems", JSON.stringify(updatedCart));
-//   }
-// };
 
 export default PRODUCT.reducer;
