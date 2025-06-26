@@ -11,7 +11,7 @@ export const Menu = () => {
 
   const menuRef = useRef(null);
   const menuHeight = useRef(0);
-  // const manualScrollTimeout = useRef(null);
+  const itemRefs = useRef([]);
 
   useEffect(() => {
     if (initialCategories?.length) {
@@ -30,26 +30,6 @@ export const Menu = () => {
     window.addEventListener("resize", updateMenuHeight);
     return () => window.removeEventListener("resize", updateMenuHeight);
   }, []);
-
-  // useEffect(() => {
-  //   if (!menuRef.current) return;
-
-  //   // const handleScroll = () => {
-  //   //   setIsManualScrolling(true);
-  //   //   clearTimeout(manualScrollTimeout.current);
-  //   //   manualScrollTimeout.current = setTimeout(() => {
-  //   //     setIsManualScrolling(false);
-  //   //   }, 200);
-  //   // };
-
-  //   const menuElement = menuRef.current;
-  //   menuElement.addEventListener("scroll", handleScroll);
-
-  //   return () => {
-  //     menuElement.removeEventListener("scroll", handleScroll);
-  //     clearTimeout(manualScrollTimeout.current);
-  //   };
-  // }, []);
 
   useEffect(() => {
     if (!categories?.length) return;
@@ -80,6 +60,33 @@ export const Menu = () => {
               mostVisibleSection,
           }))
         );
+
+        const activeIndex = categories.findIndex(
+          (cat) =>
+            cat.label.toLowerCase().replace(/\s+/g, "-") === mostVisibleSection
+        );
+
+        const activeEl = itemRefs.current[activeIndex];
+        const menuEl = menuRef.current;
+
+        if (activeEl && menuEl) {
+          const menuRect = menuEl.getBoundingClientRect();
+          const activeRect = activeEl.getBoundingClientRect();
+
+          if (activeRect.right > menuRect.right) {
+            menuEl.scrollBy({
+              left: activeRect.right - menuRect.right + 10,
+              inline: "center",
+              block: "nearest",
+            });
+          } else if (activeRect.left < menuRect.left) {
+            menuEl.scrollBy({
+              left: activeRect.left - menuRect.left - 10,
+              inline: "center",
+              block: "nearest",
+            });
+          }
+        }
       }
     };
 
@@ -99,8 +106,6 @@ export const Menu = () => {
 
   const handleClick = (index) => {
     if (!categories.length) return;
-
-    // setIsManualScrolling(false);
 
     const updated = categories.map((cat, i) => ({
       ...cat,
@@ -129,7 +134,11 @@ export const Menu = () => {
       ) : (
         <ul className="menu-list" ref={menuRef}>
           {categories.map((category, index) => (
-            <li key={index} className="menu-item">
+            <li
+              key={index}
+              className="menu-item"
+              ref={(el) => (itemRefs.current[index] = el)}
+            >
               <a
                 href={`#${category.label.toLowerCase().replace(/\s+/g, "-")}`}
                 className={`menu-link ${category.active ? "active" : ""}`}
