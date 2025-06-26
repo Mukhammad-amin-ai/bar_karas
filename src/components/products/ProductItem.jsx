@@ -67,13 +67,40 @@ export const ProductItem = ({ product, onProductClick }) => {
     );
   };
 
+  // const handleQuantityChange = (id, sizeId, newQuantity) => {
+
+  //   const updatedCart = cartItems.map((item) => {
+  //     if (item.id === id && item.sizeId === sizeId) {
+  //       return { ...item, quantity: newQuantity };
+  //     }
+  //     return item;
+  //   });
+  //   setCartItems(updatedCart);
+  //   localStorage.setItem("cartItems", JSON.stringify(updatedCart));
+
+  //   window.dispatchEvent(
+  //     new CustomEvent("cartUpdated", {
+  //       detail: { cartItems: updatedCart },
+  //     })
+  //   );
+  // };
+
   const handleQuantityChange = (id, sizeId, newQuantity) => {
-    const updatedCart = cartItems.map((item) => {
-      if (item.id === id && item.sizeId === sizeId) {
-        return { ...item, quantity: newQuantity };
-      }
-      return item;
-    });
+    let updatedCart;
+
+    if (newQuantity === 0) {
+      updatedCart = cartItems.filter(
+        (item) => !(item.id === id && item.sizeId === sizeId)
+      );
+    } else {
+      updatedCart = cartItems.map((item) => {
+        if (item.id === id && item.sizeId === sizeId) {
+          return { ...item, quantity: newQuantity };
+        }
+        return item;
+      });
+    }
+
     setCartItems(updatedCart);
     localStorage.setItem("cartItems", JSON.stringify(updatedCart));
 

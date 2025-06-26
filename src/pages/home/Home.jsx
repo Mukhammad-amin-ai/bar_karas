@@ -104,8 +104,6 @@ export const Home = () => {
     );
   }, [dispatch, restaurant]);
 
-  // ===================================================
-
   return (
     <div>
       <Header category={category} />

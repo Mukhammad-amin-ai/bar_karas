@@ -12,7 +12,7 @@
   justify-content: end;
   transform: translateY(calc(100% + 10px));
   will-change: transform;
-  transition: 0.3s ease transform;
+  transition: 0.2s ease transform;
 
   &.show {
     transform: translateY(0);
