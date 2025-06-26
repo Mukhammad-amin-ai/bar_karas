@@ -96,7 +96,15 @@
 @media screen and (max-width: 375px) {
   .header {
     .container {
-      padding-left: 10px;
+      padding-left: 5px;
+      padding-inline: 10px;
+      .account-header {
+        .left-box {
+          span {
+            font-size: 13px;
+          }
+        }
+      }
     }
   }
 }

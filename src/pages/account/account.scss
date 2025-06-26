@@ -203,3 +203,30 @@
     line-height: 16px;
   }
 }
+
+@media screen and (max-width: 375px) {
+  .account {
+    .container {
+      padding-inline: 10px;
+      .account-header {
+        .left-box {
+          span {
+            font-size: 13px;
+          }
+        }
+      }
+    }
+    .order-history {
+      .status-btn.progress {
+        white-space: nowrap;
+      }
+    }
+    .info-box {
+      .price-box {
+        span {
+          white-space: nowrap;
+        }
+      }
+    }
+  }
+}

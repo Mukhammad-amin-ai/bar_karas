@@ -290,7 +290,7 @@ export const ProductCardModal = ({ product, className, onClose }) => {
               </div>
               <div className="product-footer">
                 <span className="price">
-                  Цена: {productAcc ? productAcc.price : 0}
+                  Цена: {productAcc ? productAcc.price : 0} ₽
                 </span>
                 {currentCartItem ? (
                   <CounterBtn
