@@ -107,7 +107,7 @@ export const ProductCardModal = ({ product, className, onClose }) => {
         name: product.name,
         category: product.category,
         restaurant: product.restaurant,
-        image: product.img || size.image,
+        image: size.image,
         price: size.price,
         sizeName: size.name,
         sizeIndex: sizeIndex,
