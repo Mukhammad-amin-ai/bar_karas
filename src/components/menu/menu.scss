@@ -3,6 +3,26 @@
   top: 0;
   z-index: 100;
 }
+.menu-container2 {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.menu-list2 {
+  display: flex;
+  gap: 4px;
+  min-width: 375px;
+  overflow-x: auto;
+  margin-bottom: 12px;
+  list-style: none;
+  white-space: nowrap;
+  padding: 12px 0 12px 20px;
+  position: sticky;
+  top: 0;
+  left: 0;
+  background: #fff;
+  z-index: 99;
+}
 
 .menu-list {
   display: flex;

@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Header } from "../../components/index.js";
+import { Header, MenuSceleton } from "../../components/index.js";
 import { FetchMenu } from "./module";
 import {
   BottomCardModal,
@@ -17,6 +17,7 @@ import "./home.scss";
 export const Home = () => {
   const dispatch = useDispatch();
   const { restaurant } = useParams();
+  const loading = useSelector((state) => state.menu.loading);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [modals, setModals] = useState({
     productCard: false,
@@ -107,7 +108,13 @@ export const Home = () => {
   return (
     <div>
       <Header category={category} />
-      <Menu />
+      {loading ? (
+        <>
+          <MenuSceleton />
+        </>
+      ) : (
+        <Menu />
+      )}
       <ProductsList
         onProductClick={handleProductClick}
         showBottomModal={showBottomModal}

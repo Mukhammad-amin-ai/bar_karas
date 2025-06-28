@@ -102,11 +102,11 @@ export const ProductCardModal = ({ product, className, onClose }) => {
 
       const size = product.itemSizes[sizeIndex];
 
+      // category: product.category,
+      // restaurant: product.restaurant,
       const structuredItem = {
         id: product._id,
         name: product.name,
-        category: product.category,
-        restaurant: product.restaurant,
         image: size.image,
         price: size.price,
         sizeName: size.name,

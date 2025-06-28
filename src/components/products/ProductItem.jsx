@@ -40,11 +40,11 @@ export const ProductItem = ({ product, onProductClick }) => {
     e.preventDefault();
     const defaultIndex = product.itemSizes.findIndex((s) => s.isDefault);
     const size = product.itemSizes[defaultIndex];
+    // category: product.category,
+    // restaurant: product.restaurant,
     const structuredItem = {
       id: product._id,
       name: product.name,
-      category: product.category,
-      restaurant: product.restaurant,
       image: product.img || size.image,
       price: size.price,
       sizeName: size.name,

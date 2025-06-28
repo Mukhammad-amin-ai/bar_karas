@@ -64,12 +64,12 @@ export const AddToCart = (product, ProductSize) => async () => {
       id: product._id,
       name: product.name,
       img: findDefault.image,
-      category: product.category,
-      restaurant: product.restaurant,
       sizeId: findDefault._id,
       price: findDefault.price,
       quantity: 1,
     };
+    // category: product.category,
+    // restaurant: product.restaurant,
     const updatedCart = [...cartItems, structure];
     localStorage.setItem("cartItems", JSON.stringify(updatedCart));
   } else {

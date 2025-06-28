@@ -7,3 +7,4 @@ export { Cart } from "./modals/Cart";
 export { BottomCardModal } from "./modals/BottomCardModal";
 export { ProductSkeleton } from "./skeleton/ProductSkeleton";
 export { CategorySkeleton } from './skeleton/CategorySkeleton'
+export { MenuSceleton } from "./menu/Menu-sceleton";
