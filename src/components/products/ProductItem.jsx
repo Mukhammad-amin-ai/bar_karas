@@ -18,11 +18,11 @@ export const ProductItem = ({ product, onProductClick }) => {
       if (Array.isArray(parsed)) {
         setCartItems(parsed);
       } else {
-        setCartItems([]); // fallback to empty array
+        setCartItems([]); 
       }
     } catch (error) {
       console.error("Error parsing cartItems from localStorage", error);
-      setCartItems([]); // fallback
+      setCartItems([]); 
     }
   }, []);
 
@@ -40,8 +40,6 @@ export const ProductItem = ({ product, onProductClick }) => {
     e.preventDefault();
     const defaultIndex = product.itemSizes.findIndex((s) => s.isDefault);
     const size = product.itemSizes[defaultIndex];
-    // category: product.category,
-    // restaurant: product.restaurant,
     const structuredItem = {
       id: product._id,
       name: product.name,
@@ -66,24 +64,6 @@ export const ProductItem = ({ product, onProductClick }) => {
       })
     );
   };
-
-  // const handleQuantityChange = (id, sizeId, newQuantity) => {
-
-  //   const updatedCart = cartItems.map((item) => {
-  //     if (item.id === id && item.sizeId === sizeId) {
-  //       return { ...item, quantity: newQuantity };
-  //     }
-  //     return item;
-  //   });
-  //   setCartItems(updatedCart);
-  //   localStorage.setItem("cartItems", JSON.stringify(updatedCart));
-
-  //   window.dispatchEvent(
-  //     new CustomEvent("cartUpdated", {
-  //       detail: { cartItems: updatedCart },
-  //     })
-  //   );
-  // };
 
   const handleQuantityChange = (id, sizeId, newQuantity) => {
     let updatedCart;

@@ -38,7 +38,6 @@ const PRODUCT = createSlice({
 
       localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
     },
-    // Пример удаления
     removeFromCart: (state, action) => {
       const { id, sizeIndex } = action.payload;
       state.cartItems = state.cartItems.filter(
@@ -68,8 +67,7 @@ export const AddToCart = (product, ProductSize) => async () => {
       price: findDefault.price,
       quantity: 1,
     };
-    // category: product.category,
-    // restaurant: product.restaurant,
+   
     const updatedCart = [...cartItems, structure];
     localStorage.setItem("cartItems", JSON.stringify(updatedCart));
   } else {
